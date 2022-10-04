@@ -8,11 +8,12 @@ import {Patterns} from "./Patterns";
 
 function App() {
 const [board, setBoard] = useState(["","","","","","","","","",]);
-const [player,  setPlayer] = useState("X"); 
+const [player,  setPlayer] = useState("O"); 
 const [result, setResult] = useState({winner: "none", state: "none"})
 
 useEffect(()=> {
 checkWin();
+checkIfTie();
 if (player === "X") {
   setPlayer("O");
 } else {
@@ -22,7 +23,8 @@ if (player === "X") {
 
 useEffect(()=>{
   if(result.state !== "none"){
-  alert(`Game Finished! Winner Player: ${result.winner}`);
+  alert(`Game Finished! Winning Player: ${result.winner}`);
+  restartGame();
   }
 },[result]);
 
@@ -36,6 +38,7 @@ const chooseSqaure = (square) => {
   
 }
 
+
 const checkWin = () =>{
 Patterns.forEach((currPattern)=>{
   const firstPlayer = board[currPattern[0]];
@@ -47,10 +50,28 @@ Patterns.forEach((currPattern)=>{
     }
   })
   if(foundWinningPatter){
-    setResult({winner: player, state: "won"})
+    setResult({winner: player, state: "Won"})
   }
 })
 }
+
+const checkIfTie = () => {
+  let filled = true;
+  board.forEach((square) => {
+    if (square === "") {
+      filled = false;
+    }
+  });
+  if(filled){
+    setResult({winner: "No One", state: "Tie"})
+  }
+};
+
+const restartGame = () =>{
+  setBoard(["", "", "", "", "", "", "", "", ""]);
+  setPlayer("O");
+}
+
   return (
     <div className="App">
       <div className="board">
